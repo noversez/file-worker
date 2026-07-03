@@ -1,0 +1,38 @@
+{
+  "name": "file-prefix-cleaner",
+  "version": "2.0.0",
+  "private": true,
+  "author": "Alexey",
+  "main": "main.js",
+  "description": "Electron version of the file prefix cleaner utility.",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron .",
+    "dist": "electron-builder --win portable",
+    "pack": "electron-builder --dir"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.fileprefixcleaner.app",
+    "productName": "File Prefix Cleaner",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "index.html",
+      "renderer.js",
+      "styles.css",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "portable"
+      ]
+    }
+  }
+}

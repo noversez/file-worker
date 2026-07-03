@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>File Prefix Cleaner</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <section class="hero panel">
+      <div>
+        <p class="eyebrow">File Prefix Cleaner</p>
+        <h1>Очистка префиксов в файлах и папках</h1>
+        <p class="hero-text">Electron-версия старой утилиты: поиск по префиксам, предпросмотр, переименование и удаление в корзину.</p>
+      </div>
+      <div id="statusChip" class="status-chip">Готово</div>
+    </section>
+
+    <section class="panel form-panel">
+      <div class="field">
+        <label for="folderInput">Папка</label>
+        <div class="folder-row">
+          <input id="folderInput" type="text" placeholder="Выберите папку для обработки">
+          <button id="browseBtn" class="secondary">Обзор</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="prefixInput">Префиксы</label>
+        <textarea id="prefixInput" rows="4">[QWERTY.COM]</textarea>
+        <p class="hint">По одному в строке, либо через запятую или `;`.</p>
+      </div>
+
+      <div class="options-row">
+        <label class="checkbox">
+          <input id="recursiveInput" type="checkbox">
+          <span>Искать в подпапках</span>
+        </label>
+        <span id="countLabel" class="count-label">0 элементов</span>
+      </div>
+
+      <div class="button-row">
+        <button id="scanRenameBtn" class="primary">Проверить переименование</button>
+        <button id="scanDeleteBtn" class="danger">Проверить удаление</button>
+        <button id="executeBtn" class="accent">Выполнить</button>
+      </div>
+    </section>
+
+    <section class="panel results-panel">
+      <div class="panel-head">
+        <h2>Предпросмотр</h2>
+        <p>Ниже показаны файлы и папки, которые будут изменены.</p>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Имя</th>
+              <th>Префикс</th>
+              <th>Новый путь</th>
+              <th>Папка</th>
+              <th>Тип</th>
+            </tr>
+          </thead>
+          <tbody id="resultsBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="renderer.js"></script>
+</body>
+</html>
