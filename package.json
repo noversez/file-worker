@@ -26,10 +26,12 @@
       "output": "dist"
     },
     "npmRebuild": false,
-    "compression": "store",
+    "compression": "maximum",
+    "afterPack": "scripts/after-pack.js",
     "icon": "assets/icon.ico",
     "files": [
       "build/**/*",
+      "!build/**/*.map",
       "assets/**/*",
       "index.html",
       "styles.css",
