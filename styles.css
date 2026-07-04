@@ -52,7 +52,7 @@ svg {
   width: 100vw;
   height: 100vh;
   display: grid;
-  grid-template-rows: 68px minmax(0, 1fr) 94px;
+  grid-template-rows: 68px minmax(360px, 1fr) minmax(82px, 94px);
   gap: 10px;
   padding: 0 10px 10px;
   border: 1px solid rgba(255, 255, 255, 0.45);
@@ -196,7 +196,7 @@ svg {
 .content-grid {
   min-height: 0;
   display: grid;
-  grid-template-columns: 425px minmax(0, 1fr);
+  grid-template-columns: clamp(390px, 29vw, 460px) minmax(0, 1fr);
   gap: 10px;
 }
 
@@ -213,6 +213,9 @@ svg {
   flex-direction: column;
   padding: 20px;
   gap: 26px;
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #304254 transparent;
 }
 
 .panel-section h2 {
@@ -341,6 +344,7 @@ textarea:focus {
 
 .scan-section {
   margin-top: 4px;
+  margin-bottom: 0;
 }
 
 .mode-card {
@@ -399,28 +403,6 @@ textarea:focus {
 .mode-arrow {
   color: #4ca1ff;
   font-size: 30px;
-}
-
-.help-card {
-  display: grid;
-  grid-template-columns: 30px 1fr;
-  gap: 12px;
-  margin-top: auto;
-  padding: 16px;
-  border: 1px solid #304254;
-  border-radius: 6px;
-  background: rgba(20, 31, 41, 0.8);
-  color: var(--muted);
-}
-
-.help-card svg {
-  color: #4ca1ff;
-}
-
-.help-card p {
-  margin: 0;
-  font-size: 14px;
-  line-height: 1.45;
 }
 
 .preview-panel {
@@ -544,11 +526,14 @@ tbody tr:hover {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  min-width: 0;
   padding: 16px 25px;
 }
 
 .summary-stats {
   gap: 34px;
+  min-width: 0;
+  flex: 1 1 auto;
 }
 
 .stat {
@@ -585,6 +570,8 @@ tbody tr:hover {
 
 .summary-actions {
   gap: 28px;
+  flex: 0 1 auto;
+  min-width: 0;
 }
 
 .execute-btn {
@@ -776,6 +763,7 @@ tbody tr:hover {
     height: auto;
     min-height: 100vh;
     grid-template-rows: auto auto auto;
+    overflow: visible;
   }
 
   .titlebar,
@@ -788,6 +776,10 @@ tbody tr:hover {
     grid-template-columns: 1fr;
   }
 
+  .config-panel {
+    overflow: visible;
+  }
+
   .summary-stats,
   .summary-actions {
     flex-wrap: wrap;
@@ -796,5 +788,44 @@ tbody tr:hover {
   .execute-btn {
     min-width: 0;
     width: 100%;
+  }
+}
+
+@media (max-height: 760px) {
+  .app-shell {
+    grid-template-rows: 60px minmax(0, 1fr) 78px;
+    gap: 8px;
+  }
+
+  .titlebar {
+    padding-top: 8px;
+    padding-bottom: 6px;
+  }
+
+  .config-panel {
+    gap: 18px;
+    padding: 16px;
+  }
+
+  .panel-section h2 {
+    margin-bottom: 14px;
+  }
+
+  .field {
+    margin-bottom: 16px;
+  }
+
+  textarea {
+    min-height: 116px;
+  }
+
+  .mode-card {
+    min-height: 62px;
+    margin-bottom: 10px;
+  }
+
+  .summary-bar {
+    padding-top: 10px;
+    padding-bottom: 10px;
   }
 }
