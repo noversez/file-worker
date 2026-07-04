@@ -8,68 +8,204 @@
 </head>
 <body>
   <main class="app-shell">
-    <section class="hero panel">
-      <div>
-        <p class="eyebrow">File Prefix Cleaner</p>
-        <h1>Очистка префиксов в файлах и папках</h1>
-        <p class="hero-text">Electron-версия старой утилиты: поиск по префиксам, предпросмотр, переименование и удаление в корзину.</p>
+    <header class="titlebar">
+      <div class="brand">
+        <img class="brand-icon" src="assets/icon.svg" alt="" aria-hidden="true">
+        <h1>File Prefix Cleaner</h1>
+        <span class="version">v2.0.0</span>
       </div>
-      <div id="statusChip" class="status-chip">Готово</div>
+      <div class="titlebar-right">
+        <div id="statusChip" class="status-chip" data-kind="ok">
+          <span class="status-dot"></span>
+          <span>Готово</span>
+        </div>
+        <div class="window-divider"></div>
+        <button id="minimizeBtn" class="window-btn" aria-label="Свернуть">−</button>
+        <button id="maximizeBtn" class="window-btn" aria-label="Развернуть">□</button>
+        <button id="closeBtn" class="window-btn close" aria-label="Закрыть">×</button>
+      </div>
+    </header>
+
+    <section class="content-grid">
+      <aside class="config-panel panel">
+        <section class="panel-section">
+          <h2>Конфигурация</h2>
+
+          <div class="field">
+            <label for="folderInput">Целевая папка</label>
+            <div class="folder-row">
+              <input id="folderInput" type="text" placeholder="C:\Users\Alex\Documents\Project Files">
+              <button id="browseBtn" class="square-btn" title="Выбрать папку" aria-label="Выбрать папку">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H10l2 2h6.5A2.5 2.5 0 0 1 21 9.5v7A2.5 2.5 0 0 1 18.5 19h-13A2.5 2.5 0 0 1 3 16.5v-9Z"/><path d="M3 10h18"/></svg>
+              </button>
+            </div>
+            <p class="hint">Выберите корневую папку для сканирования файлов.</p>
+          </div>
+
+          <div class="field">
+            <div class="label-row">
+              <label for="prefixInput">Префиксы (по одному в строке)</label>
+              <span id="prefixCount" class="mini-badge">1</span>
+            </div>
+            <textarea id="prefixInput" rows="7" spellcheck="false">[QWERTY.COM]</textarea>
+            <p class="hint">Введите префиксы, которые нужно убрать из начала имён.</p>
+          </div>
+
+          <label class="checkbox-line">
+            <input id="recursiveInput" type="checkbox">
+            <span>
+              <strong>Сканировать подпапки</strong>
+              <small>Включить файлы во всех вложенных папках.</small>
+            </span>
+          </label>
+        </section>
+
+        <section class="panel-section scan-section">
+          <h2>Режим сканирования</h2>
+          <button id="scanRenameBtn" class="mode-card rename-mode">
+            <span class="mode-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4"/></svg>
+            </span>
+            <span>
+              <strong>Сканировать для переименования</strong>
+              <small>Показать файлы, которые будут переименованы</small>
+            </span>
+            <span class="mode-arrow">›</span>
+          </button>
+          <button id="scanDeleteBtn" class="mode-card delete-mode">
+            <span class="mode-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M7 7l1 13h8l1-13"/><path d="M10 11v5"/><path d="M14 11v5"/></svg>
+            </span>
+            <span>
+              <strong>Сканировать для удаления</strong>
+              <small>Показать файлы, которые будут удалены</small>
+            </span>
+            <span class="mode-arrow">›</span>
+          </button>
+        </section>
+
+        <section class="help-card">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 10v7"/><path d="M12 7h.01"/></svg>
+          <p>Переименование убирает найденные префиксы. Удаление переносит найденные файлы и папки в корзину.</p>
+        </section>
+      </aside>
+
+      <section class="preview-panel panel">
+        <div class="preview-head">
+          <div class="preview-title">
+            <h2>Предпросмотр</h2>
+            <span id="countLabel" class="items-badge">0 элементов</span>
+            <span id="previewModeLabel" class="mode-label">Сначала выполните сканирование</span>
+          </div>
+          <button id="exportBtn" class="toolbar-btn">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg>
+            Экспорт предпросмотра
+          </button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th class="check-col"><input id="selectAllInput" type="checkbox" aria-label="Выбрать всё"></th>
+                <th>Имя</th>
+                <th>Префикс</th>
+                <th>Новое имя</th>
+                <th>Папка</th>
+                <th>Тип</th>
+              </tr>
+            </thead>
+            <tbody id="resultsBody"></tbody>
+          </table>
+        </div>
+      </section>
     </section>
 
-    <section class="panel form-panel">
-      <div class="field">
-        <label for="folderInput">Папка</label>
-        <div class="folder-row">
-          <input id="folderInput" type="text" placeholder="Выберите папку для обработки">
-          <button id="browseBtn" class="secondary">Обзор</button>
+    <footer class="summary-bar panel">
+      <div class="summary-stats">
+        <div class="stat">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v5h5"/></svg>
+          <strong id="fileCount">0</strong>
+          <span>Файлов</span>
+        </div>
+        <div class="stat">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h7l2 2h9v10H3z"/></svg>
+          <strong id="folderCount">0</strong>
+          <span>Папок</span>
+        </div>
+        <div class="stat success">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg>
+          <strong id="selectedCount">0</strong>
+          <span id="selectedLabel">Будет переименовано</span>
+        </div>
+      </div>
+      <div class="summary-actions">
+        <button id="clearBtn" class="toolbar-btn">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M7 7l1 13h8l1-13"/></svg>
+          Очистить
+        </button>
+        <button id="executeBtn" class="execute-btn">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+          <span>Выполнить</span>
+        </button>
+      </div>
+    </footer>
+  </main>
+
+  <div id="confirmOverlay" class="modal-overlay" hidden>
+    <section class="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+      <button id="cancelConfirmXBtn" class="modal-close" aria-label="Закрыть">×</button>
+      <div class="modal-head">
+        <div class="modal-mark">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10v10H7z"/><path d="M9 12h6"/></svg>
+        </div>
+        <div>
+          <h2 id="confirmTitle">Подтвердить переименование</h2>
+          <p id="confirmText">Вы собираетесь переименовать файлы, удалив префиксы.</p>
         </div>
       </div>
 
-      <div class="field">
-        <label for="prefixInput">Префиксы</label>
-        <textarea id="prefixInput" rows="4">[QWERTY.COM]</textarea>
-        <p class="hint">По одному в строке, либо через запятую или `;`.</p>
+      <div class="modal-stats">
+        <div>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/></svg>
+          <strong id="modalFileCount">0</strong>
+          <span>Файлов</span>
+        </div>
+        <div>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4z"/><path d="M8 9h8"/><path d="M8 13h8"/></svg>
+          <strong id="modalPrefixCount">0</strong>
+          <span>Префиксов</span>
+        </div>
+        <div>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h7l2 2h9v10H3z"/></svg>
+          <strong id="modalFolderCount">0</strong>
+          <span>Папок</span>
+        </div>
       </div>
 
-      <div class="options-row">
-        <label class="checkbox">
-          <input id="recursiveInput" type="checkbox">
-          <span>Искать в подпапках</span>
-        </label>
-        <span id="countLabel" class="count-label">0 элементов</span>
+      <div class="action-summary">
+        <h3>Сводка действия</h3>
+        <dl>
+          <div><dt>Действие:</dt><dd id="summaryAction">Переименовать</dd></div>
+          <div><dt>Целевая папка:</dt><dd id="summaryFolder">-</dd></div>
+          <div><dt>Режим:</dt><dd id="summaryMode">Без подпапок</dd></div>
+          <div><dt>Всего элементов:</dt><dd id="summaryTotal">0</dd></div>
+          <div><dt>Изменения:</dt><dd id="summaryChanges">0 элементов</dd></div>
+        </dl>
       </div>
 
-      <div class="button-row">
-        <button id="scanRenameBtn" class="primary">Проверить переименование</button>
-        <button id="scanDeleteBtn" class="danger">Проверить удаление</button>
-        <button id="executeBtn" class="accent">Выполнить</button>
-      </div>
-    </section>
+      <p id="modalNote" class="modal-note">Файлы не будут удалены. Исходные файлы будут переименованы.</p>
 
-    <section class="panel results-panel">
-      <div class="panel-head">
-        <h2>Предпросмотр</h2>
-        <p>Ниже показаны файлы и папки, которые будут изменены.</p>
-      </div>
-
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Имя</th>
-              <th>Префикс</th>
-              <th>Новый путь</th>
-              <th>Папка</th>
-              <th>Тип</th>
-            </tr>
-          </thead>
-          <tbody id="resultsBody"></tbody>
-        </table>
+      <div class="modal-actions">
+        <button id="cancelConfirmBtn" class="modal-btn secondary">Отмена</button>
+        <button id="acceptConfirmBtn" class="modal-btn primary">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+          Выполнить
+        </button>
       </div>
     </section>
-  </main>
+  </div>
 
-  <script src="renderer.js"></script>
+  <script src="build/renderer/renderer.js"></script>
 </body>
 </html>
